@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -20,6 +21,8 @@ func (s *GatewayServer) HTTPHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *GatewayServer) ForwardToGRPC(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
+	fmt.Println("1--------------")
+
 	// 使用gRPC客户端转发请求给其他gRPC服务
 	response, err := s.grpcClient.SayHello(ctx, request)
 	if err != nil {
