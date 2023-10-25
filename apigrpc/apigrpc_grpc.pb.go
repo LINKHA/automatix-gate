@@ -21,91 +21,89 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GateServer_SayHello_FullMethodName = "/apigrpc.GateServer/SayHello"
+	YourService_YourMethod_FullMethodName = "/apigrpc.YourService/YourMethod"
 )
 
-// GateServerClient is the client API for GateServer service.
+// YourServiceClient is the client API for YourService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GateServerClient interface {
-	// Sends a greeting
-	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+type YourServiceClient interface {
+	YourMethod(ctx context.Context, in *YourRequest, opts ...grpc.CallOption) (*YourResponse, error)
 }
 
-type gateServerClient struct {
+type yourServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGateServerClient(cc grpc.ClientConnInterface) GateServerClient {
-	return &gateServerClient{cc}
+func NewYourServiceClient(cc grpc.ClientConnInterface) YourServiceClient {
+	return &yourServiceClient{cc}
 }
 
-func (c *gateServerClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
-	out := new(HelloReply)
-	err := c.cc.Invoke(ctx, GateServer_SayHello_FullMethodName, in, out, opts...)
+func (c *yourServiceClient) YourMethod(ctx context.Context, in *YourRequest, opts ...grpc.CallOption) (*YourResponse, error) {
+	out := new(YourResponse)
+	err := c.cc.Invoke(ctx, YourService_YourMethod_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// GateServerServer is the server API for GateServer service.
-// All implementations must embed UnimplementedGateServerServer
+// YourServiceServer is the server API for YourService service.
+// All implementations must embed UnimplementedYourServiceServer
 // for forward compatibility
-type GateServerServer interface {
-	// Sends a greeting
-	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
-	mustEmbedUnimplementedGateServerServer()
+type YourServiceServer interface {
+	YourMethod(context.Context, *YourRequest) (*YourResponse, error)
+	mustEmbedUnimplementedYourServiceServer()
 }
 
-// UnimplementedGateServerServer must be embedded to have forward compatible implementations.
-type UnimplementedGateServerServer struct {
+// UnimplementedYourServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedYourServiceServer struct {
 }
 
-func (UnimplementedGateServerServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+func (UnimplementedYourServiceServer) YourMethod(context.Context, *YourRequest) (*YourResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method YourMethod not implemented")
 }
-func (UnimplementedGateServerServer) mustEmbedUnimplementedGateServerServer() {}
+func (UnimplementedYourServiceServer) mustEmbedUnimplementedYourServiceServer() {}
 
-// UnsafeGateServerServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GateServerServer will
+// UnsafeYourServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to YourServiceServer will
 // result in compilation errors.
-type UnsafeGateServerServer interface {
-	mustEmbedUnimplementedGateServerServer()
+type UnsafeYourServiceServer interface {
+	mustEmbedUnimplementedYourServiceServer()
 }
 
-func RegisterGateServerServer(s grpc.ServiceRegistrar, srv GateServerServer) {
-	s.RegisterService(&GateServer_ServiceDesc, srv)
+func RegisterYourServiceServer(s grpc.ServiceRegistrar, srv YourServiceServer) {
+	s.RegisterService(&YourService_ServiceDesc, srv)
 }
 
-func _GateServer_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloRequest)
+func _YourService_YourMethod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(YourRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GateServerServer).SayHello(ctx, in)
+		return srv.(YourServiceServer).YourMethod(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GateServer_SayHello_FullMethodName,
+		FullMethod: YourService_YourMethod_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GateServerServer).SayHello(ctx, req.(*HelloRequest))
+		return srv.(YourServiceServer).YourMethod(ctx, req.(*YourRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// GateServer_ServiceDesc is the grpc.ServiceDesc for GateServer service.
+// YourService_ServiceDesc is the grpc.ServiceDesc for YourService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var GateServer_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "apigrpc.GateServer",
-	HandlerType: (*GateServerServer)(nil),
+var YourService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "apigrpc.YourService",
+	HandlerType: (*YourServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _GateServer_SayHello_Handler,
+			MethodName: "YourMethod",
+			Handler:    _YourService_YourMethod_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

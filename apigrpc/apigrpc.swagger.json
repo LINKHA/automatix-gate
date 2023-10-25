@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "GateServer"
+      "name": "YourService"
     }
   ],
   "consumes": [
@@ -15,16 +15,56 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/your-service/your-method": {
+      "post": {
+        "operationId": "YourService_YourMethod",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apigrpcYourResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apigrpcYourRequest"
+            }
+          }
+        ],
+        "tags": [
+          "YourService"
+        ]
+      }
+    }
+  },
   "definitions": {
-    "apigrpcHelloReply": {
+    "apigrpcYourRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "apigrpcYourResponse": {
       "type": "object",
       "properties": {
         "message": {
           "type": "string"
         }
-      },
-      "title": "The response message containing the greetings"
+      }
     },
     "protobufAny": {
       "type": "object",

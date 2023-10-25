@@ -6,17 +6,21 @@ package apigrpc;
 
 option go_package = "github.com/LINKHA/automatix-gate/apigrpc";
 
-service GateServer {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+import "google/api/annotations.proto";
+
+service YourService {
+  rpc YourMethod (YourRequest) returns (YourResponse){
+      option (google.api.http) = {
+        post: "/your-service/your-method"
+        body: "*"
+      };
+  }
 }
 
-// The request message containing the user's name.
-message HelloRequest {
+message YourRequest {
   string name = 1;
 }
 
-// The response message containing the greetings
-message HelloReply {
+message YourResponse {
   string message = 1;
 }
