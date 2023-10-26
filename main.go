@@ -1,30 +1,46 @@
 package main
 
 import (
-	"context"
-	"log"
-	"net/http"
+	"fmt"
 
-	pb "github.com/LINKHA/automatix-gate/apigrpc" // 导入你的gRPC协议包
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"google.golang.org/grpc"
+	dynamic_call "github.com/LINKHA/automatix-common/dynamic_call"
+
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 func main() {
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	fmt.Println("start...")
+	defer fmt.Println("end...")
 
-	mux := runtime.NewServeMux()
+	dynamic_call.SetProtoSetFiles("dynamic_call.protoset")
+	err := dynamic_call.InitDescSource()
 
-	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err := pb.RegisterYourServiceHandlerFromEndpoint(ctx, mux, "localhost:50051", opts)
 	if err != nil {
-		log.Fatalf("failed to register gateway: %v", err)
+		panic(err.Error())
 	}
 
-	log.Println("Starting server on :8080")
-	if err := http.ListenAndServe(":8080", mux); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	var handler = DefaultEventHandler{}
+	var sendBody string
+
+	grpcEnter, err := dynamic_call.New(
+		dynamic_call.SetHookHandler(&handler),
+	)
+	grpcEnter.Init()
+
+	sendBody = `{"name": "golang world"}`
+	res, err := grpcEnter.Call("127.0.0.1:50051", "apigrpc.Greeter", "SayHello", sendBody)
+	fmt.Printf("%+v \n", res)
+	fmt.Println("req/reply return err: ", err)
+
+}
+
+type DefaultEventHandler struct {
+	sendChan chan []byte
+}
+
+func (h *DefaultEventHandler) OnReceiveData(md metadata.MD, resp string, respErr error) {
+}
+
+func (h *DefaultEventHandler) OnReceiveTrailers(stat *status.Status, md metadata.MD) {
 }
